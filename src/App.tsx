@@ -18,7 +18,7 @@ const App: React.FC<AuthService> = ({ authService }) => {
             <Login authService={authService}></Login>
           </Route>
           <Route path="/lobby">
-            <Lobby></Lobby>
+            <Lobby authService={authService}></Lobby>
           </Route>
         </Switch>
       </BrowserRouter>

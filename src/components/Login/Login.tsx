@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useHistory } from "react-router";
 import AuthServiceImpl from "../service/authService";
 import postCSS from "./Login.module.css";
@@ -15,6 +15,12 @@ type LoginContent = {
 
 const Login: React.FC<LoginService> = ({ authService }) => {
   const history = useHistory();
+
+  useEffect(() => {
+    authService.userState((user: any) => {
+      user && goToLobby(user.uid);
+    });
+  });
 
   const userLoginTextContent: LoginContent = {
     title: "Login",

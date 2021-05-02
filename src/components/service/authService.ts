@@ -6,6 +6,14 @@ class AuthServiceImpl {
     return firebaseAuth.signInWithPopup(provider);
   }
 
+  logout() {
+    firebaseAuth.signOut();
+  }
+
+  userState(onAuthChanged: Function): void {
+    firebaseAuth.onAuthStateChanged((user) => onAuthChanged(user));
+  }
+
   getProvider(providerClass: string) {
     switch (providerClass) {
       case "Google":
