@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import AuthServiceImpl from "../service/authService";
 import postCSS from "./Login.module.css";
@@ -14,6 +14,7 @@ type LoginContent = {
 };
 
 const Login: React.FC<LoginService> = ({ authService }) => {
+  const [onState, setOnState] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -31,10 +32,12 @@ const Login: React.FC<LoginService> = ({ authService }) => {
   const loginBtnHandler: React.MouseEventHandler<HTMLButtonElement> = (
     event: React.MouseEvent<HTMLButtonElement>
   ): void => {
+    setOnState(true);
     authService
       .login(event.currentTarget.textContent! as string)
       .then((userDB) => {
         const userId = userDB.user.uid;
+        setOnState(false);
         goToLobby(userId);
       });
   };
@@ -47,21 +50,26 @@ const Login: React.FC<LoginService> = ({ authService }) => {
   };
 
   return (
-    <div className={postCSS.Login}>
-      <div className={postCSS.title}>{userLoginTextContent.title}</div>
-      <section className={postCSS.btns}>
-        <button onClick={loginBtnHandler} className={postCSS.googleBtn}>
-          <span className={postCSS.googleFont}>
-            {userLoginTextContent.gooleBtnName}
-          </span>
-        </button>
-        <button onClick={loginBtnHandler} className={postCSS.githubBtn}>
-          <span className={postCSS.githubFont}>
-            {userLoginTextContent.githubBtnName}
-          </span>
-        </button>
-      </section>
-    </div>
+    <>
+      {!onState && (
+        <div className={postCSS.Login}>
+          <div className={postCSS.title}>{userLoginTextContent.title}</div>
+          <section className={postCSS.btns}>
+            <button onClick={loginBtnHandler} className={postCSS.googleBtn}>
+              <span className={postCSS.googleFont}>
+                {userLoginTextContent.gooleBtnName}
+              </span>
+            </button>
+            <button onClick={loginBtnHandler} className={postCSS.githubBtn}>
+              <span className={postCSS.githubFont}>
+                {userLoginTextContent.githubBtnName}
+              </span>
+            </button>
+          </section>
+        </div>
+      )}
+      {onState && <div className={postCSS.lodingSpanner}></div>}
+    </>
   );
 };
 
