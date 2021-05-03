@@ -1,17 +1,30 @@
 import React from "react";
-import { UserFormData } from "../CreateForm/CreateForm";
 import postCSS from "./Viewer.module.css";
 
 interface Props {
-  saveData: UserFormData | undefined;
+  item: string;
+  deleteItem(itemNode: Node, delNode: Node): void;
 }
 
-const Viewer: React.FC<Props> = ({ saveData }) => {
+const Viewer: React.FC<Props> = ({ item, deleteItem }) => {
+  const onDelete: React.MouseEventHandler<HTMLButtonElement> = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    event.preventDefault();
+    const itemList = event.currentTarget.parentNode!.parentNode;
+    const delNode = event.currentTarget.parentNode;
+    console.log(itemList);
+    deleteItem(itemList!, delNode!);
+  };
+
   return (
     <section className={postCSS.section}>
-      <div className={postCSS.userName}>{saveData!.name}</div>
-      <div className={postCSS.userEmail}>{saveData!.email}</div>
-      <div className={postCSS.userMessage}>{saveData!.message}</div>
+      <li className={postCSS.user}>
+        <button onClick={onDelete} className={postCSS.delBtn}>
+          <span className={postCSS.btnTextContent}>Delete</span>
+        </button>
+        <span className={postCSS.title}>{item}</span>
+      </li>
     </section>
   );
 };

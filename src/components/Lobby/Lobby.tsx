@@ -9,6 +9,10 @@ interface AuthService {
   authService: AuthServiceImpl;
 }
 
+interface Indexable {
+  [key: string]: string;
+}
+
 type LobbyContent = {
   title: string;
   btnTextContent: string;
@@ -21,7 +25,7 @@ type FormBtn = {
 
 const Lobby: React.FC<AuthService> = ({ authService }) => {
   const [userInputCheck, setUserInputCheck] = useState<boolean>(false);
-  const [saveData, setSaveData] = useState<UserFormData>();
+  const [saveData, setSaveData] = useState<Indexable>();
   const [formState, setFormState] = useState<boolean>(false);
   const history = useHistory();
 
@@ -67,6 +71,10 @@ const Lobby: React.FC<AuthService> = ({ authService }) => {
     setUserInputCheck(true);
   };
 
+  const deleteItem = (itemNode: Node, delNode: Node): void => {
+    itemNode.removeChild(delNode);
+  };
+
   return (
     <section className={postCSS.LobbySection}>
       <span className={postCSS.title}>{LobbyTextContent.title}</span>
@@ -92,9 +100,15 @@ const Lobby: React.FC<AuthService> = ({ authService }) => {
             </div>
 
             {userInputCheck && (
-              <div className={postCSS.viewerSection}>
-                <Viewer saveData={saveData}></Viewer>
-              </div>
+              <ul className={postCSS.viewerSection}>
+                {Object.keys(saveData! as Indexable).map((key) => (
+                  <Viewer
+                    key={key}
+                    item={saveData![key]}
+                    deleteItem={deleteItem}
+                  ></Viewer>
+                ))}
+              </ul>
             )}
           </>
         )}
